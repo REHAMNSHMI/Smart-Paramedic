@@ -1,6 +1,7 @@
 const emergencyBtn = document.getElementById("emergencyBtn");
 const showCasesBtn = document.getElementById("showCasesBtn");
 const casesList = document.getElementById("casesList");
+const hintText = document.getElementById("hintText");
 const stepsSection = document.getElementById("stepsSection");
 const caseTitle = document.getElementById("caseTitle");
 const stepsList = document.getElementById("stepsList");
@@ -11,10 +12,11 @@ const backBtn = document.getElementById("backBtn");
 const synth = window.speechSynthesis;
 let recognition = null;
 
+// الحالات مع تعليمات مفيدة
 const cases = [
-  {name:"كسر", steps:["ثبّت الجزء المصاب","تجنب الحركة","اطلب مساعدة طبية"]},
-  {name:"نزيف", steps:["اضغط على مكان النزيف","ارفع الجزء المصاب","اطلب مساعدة طبية"]},
-  {name:"إغماء", steps:["ضع المصاب على ظهره","تأكد من التنفس","اطلب مساعدة طبية"]}
+  {name:"نزيف", steps:["اضغط على مكان النزيف","ارفع الجزء المصاب","اطلب مساعدة طبية"], info:"اضغط على مكان النزيف واطلب المساعدة فورًا"},
+  {name:"إغماء", steps:["ضع المصاب على ظهره","تأكد من التنفس","اطلب مساعدة طبية"], info:"ضع الشخص مستلقيًا وتحقق من تنفسه"},
+  {name:"انخفاض السكر", steps:["قدم للمصاب عصير أو حلوى","اجلس المصاب","اطلب مساعدة طبية"], info:"قدم سكريات سريعة للمصاب وأجلسه"}
 ];
 
 // عرض الحالات في زر منفصل
@@ -25,7 +27,7 @@ showCasesBtn.addEventListener("click", ()=>{
     cases.forEach(c=>{
       const card = document.createElement("div");
       card.className = "card";
-      card.innerHTML = `<h3>${c.name}</h3>`;
+      card.innerHTML = `<h3>${c.name}</h3><p>${c.info}</p>`;
       casesList.appendChild(card);
     });
   } else {
@@ -59,7 +61,7 @@ readBtn.addEventListener("click",()=>speakSteps(Array.from(stepsList.children).m
 stopBtn.addEventListener("click", ()=>{if(synth.speaking)synth.cancel();});
 backBtn.addEventListener("click",()=>{stepsSection.classList.add("hidden");});
 
-// تفعيل المايك عند الضغط على زر الطوارئ
+// تفعيل المايك عند الضغط على زر الطوارئ مع تلميح صوتي
 if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
@@ -73,15 +75,24 @@ if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
     console.log("سمعت:", word);
     const found = cases.find(c=>word.includes(c.name));
     if(found){
+      speakSteps([" تم التعرف على الحالة هذه خطوات إسعاف اولية:", found.name]);
       showSteps(found);
-      speakSteps(["تم التعرف على الحالة:", found.name]);
     }
   };
 
   recognition.onerror = function(e){console.log(e);}
 }
 
-// زر الطوارئ الكبير يفتح المايك ويستمع
+// زر الطوارئ الكبير يفتح المايك ويعطي تلميح صوتي
 emergencyBtn.addEventListener("click", ()=>{
-  if(recognition) recognition.start();
+  if(recognition){
+    recognition.start();
+    // التلميح الصوتي والنصي
+    const hintMessage = " نزيف أو إغماء أو انخفاض السكر";
+    hintText.textContent = hintMessage;
+    if(synth.speaking) synth.cancel();
+    const utter = new SpeechSynthesisUtterance(hintMessage);
+    utter.lang = "ar-SA";
+    synth.speak(utter);
+  }
 });
