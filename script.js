@@ -11,7 +11,6 @@ const backBtn = document.getElementById("backBtn");
 
 const synth = window.speechSynthesis;
 let recognition = null;
-
 // الحالات مع تعليمات مفيدة
 const cases = [
   {name:"نزيف", steps:["اضغط على مكان النزيف","ارفع الجزء المصاب","اطلب مساعدة طبية"], info:"اضغط على مكان النزيف واطلب المساعدة فورًا"},
@@ -96,3 +95,4 @@ emergencyBtn.addEventListener("click", ()=>{
     synth.speak(utter);
   }
 });
+
