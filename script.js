@@ -10,7 +10,6 @@ const playBtn = document.getElementById("playBtn"); // زر لإعادة تشغ�
 const synth = window.speechSynthesis;
 let recognition = null;
 let currentUtterance = null; // لتخزين آخر كلام ناطق
-
 const cases = [
   {name:"نزيف", steps:["اضغط على مكان النزيف","ارفع الجزء المصاب","اطلب مساعدة طبية"], info:"اضغط على مكان النزيف واطلب المساعدة فورًا"},
   {name:"إغماء", steps:["ضع المصاب على ظهره","تأكد من التنفس","اطلب مساعدة طبية"], info:"ضع الشخص مستلقيًا وتحقق من تنفسه"},
@@ -101,3 +100,4 @@ emergencyBtn.addEventListener("click", ()=>{
 // التحكم اليدوي بالصوت
 if(stopBtn) stopBtn.addEventListener("click", stopSpeech);
 if(playBtn) playBtn.addEventListener("click", playLast);
+
