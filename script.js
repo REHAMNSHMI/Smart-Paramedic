@@ -14,7 +14,6 @@ const synth = window.speechSynthesis;
 let recognition = null;
 let currentUtterance = null;
 
-// الحالات مع التعديل: إغماء → كسر
 const cases = [
   {name:"نزيف", steps:["اضغط على مكان النزيف","ارفع الجزء المصاب","اطلب مساعدة طبية"], info:"اضغط على مكان النزيف واطلب المساعدة فورًا"},
   {name:"كسر", steps:["ثبت الجزء المكسور","تجنب تحريك المصاب","اطلب مساعدة طبية"], info:"ثبت الجزء المكسور واطلب المساعدة فورًا"},
@@ -104,10 +103,7 @@ playBtn.addEventListener("click", playLast);
 
 // زر الرجوع: العودة للشاشة الرئيسية
 backBtn.addEventListener("click", ()=>{
-  // إخفاء قسم الخطوات
   stepsSection.style.display = "none";
-
-  // إيقاف أي صوت جاري
   if(synth.speaking) synth.cancel();
 
   // إعادة عرض الشاشة الرئيسية
