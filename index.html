@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>المسعف الذكي  </title>
+  <title>المسعف الذكي</title>
   <link rel="stylesheet" href="Style.css" />
 </head>
 <body>
@@ -15,7 +15,9 @@
   <main>
     <section class="hero">
       <button id="emergencyBtn" class="big-btn">زر الطوارئ</button>
-      <p class="hint">اضغط الزر لاختيار الحالة أو قل اسم الحالة بالعربي</p>
+      <button id="micBtn" class="mic-btn">🎤 تفعيل المايك</button>
+      <p class="hint">يمكنك الضغط على زر الطوارئ أو قول اسم الحالة بالعربي</p>
+      <div id="suggestions" class="suggestions"></div>
     </section>
 
     <section id="casesSection" class="hidden">
@@ -36,8 +38,6 @@
 
   <footer>المسعف الذكي &copy; 2025</footer>
 
- <script src="script.js" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
-
-
