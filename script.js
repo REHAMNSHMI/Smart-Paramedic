@@ -1,7 +1,3 @@
-<button id="emergencyBtn">🎙 اضغط وتحدث</button>
-<div id="output" style="margin-top:10px; white-space: pre-line;"></div>
-
-<script>
 const CASES = {
   "كاحل": [
     "أبعد المصاب عن الخطر.",
@@ -39,14 +35,14 @@ if ('webkitSpeechRecognition' in window) {
   r.lang = 'ar-SA';
   r.continuous = false;
 
-  btn.onclick = ()=>{
+  btn.onclick = () => {
     r.start();
     btn.textContent = "🎧 جاري الاستماع...";
   };
 
-  r.onresult = (e)=>{
+  r.onresult = (e) => {
     const text = e.results[0][0].transcript.trim();
-    console.log("تم التعرف على:", text); // لمراقبة النص
+    console.log("تم التعرف على:", text);
     let matched = null;
 
     for (const key in CASES) {
@@ -64,10 +60,9 @@ if ('webkitSpeechRecognition' in window) {
     }
   };
 
-  r.onend = ()=>{
+  r.onend = () => {
     btn.textContent = "🎙 اضغط وتحدث";
   };
 } else {
   alert("المتصفح لا يدعم ميزة التعرف على الصوت");
 }
-</script>
