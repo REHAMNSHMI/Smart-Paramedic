@@ -22,13 +22,14 @@ const CASES = {
 const btn = document.getElementById("emergencyBtn");
 const output = document.getElementById("output");
 
-// تعليمات افتراضية عند البداية
-if(output.innerHTML.trim() === "") {
-  output.innerHTML = "<b>🩺 خطوات الإسعاف المتاحة:</b><br>" +
-      "• قل: 'كاحل'<br>" +
-      "• قل: 'ضغط'<br>" +
-      "• قل: 'سكر'";
-}
+// عرض الخطوات لكل الحالات مسبقاً
+output.innerHTML = "<b>🩺 الخطوات الإسعافية لكل الحالات:</b><br>" +
+    "<b>كاحل:</b><br>" +
+    CASES["كاحل"].map(s => "• " + s).join("<br>") + "<br><br>" +
+    "<b>ضغط:</b><br>" +
+    CASES["ضغط"].map(s => "• " + s).join("<br>") + "<br><br>" +
+    "<b>سكر:</b><br>" +
+    CASES["سكر"].map(s => "• " + s).join("<br>");
 
 function speak(text){
   const u = new SpeechSynthesisUtterance(text);
@@ -72,5 +73,5 @@ if ('webkitSpeechRecognition' in window) {
   };
 
 } else {
-  output.innerHTML = "⚠️ المتصفح لا يدعم ميزة التعرف على الصوت";
+  output.innerHTML += "<br><br>⚠️ المتصفح لا يدعم ميزة التعرف على الصوت";
 }
