@@ -1,16 +1,13 @@
 const emergencyBtn = document.getElementById("emergencyBtn");
 const showCasesBtn = document.getElementById("showCasesBtn");
 const casesList = document.getElementById("casesList");
-const hintText = document.getElementById("hintText");
 const stepsSection = document.getElementById("stepsSection");
 const caseTitle = document.getElementById("caseTitle");
 const stepsList = document.getElementById("stepsList");
-const readBtn = document.getElementById("readBtn");
-const stopBtn = document.getElementById("stopBtn");
-const backBtn = document.getElementById("backBtn");
 
 const synth = window.speechSynthesis;
 let recognition = null;
+
 // الحالات مع تعليمات مفيدة
 const cases = [
   {name:"نزيف", steps:["اضغط على مكان النزيف","ارفع الجزء المصاب","اطلب مساعدة طبية"], info:"اضغط على مكان النزيف واطلب المساعدة فورًا"},
@@ -34,7 +31,7 @@ showCasesBtn.addEventListener("click", ()=>{
   }
 });
 
-// عرض الخطوات
+// عرض الخطوات وقراءتها صوتياً فوراً
 function showSteps(c){
   stepsSection.classList.remove("hidden");
   caseTitle.textContent = c.name;
@@ -55,12 +52,7 @@ function speakSteps(steps){
   synth.speak(utter);
 }
 
-// أزرار التحكم
-readBtn.addEventListener("click",()=>speakSteps(Array.from(stepsList.children).map(li=>li.textContent)));
-stopBtn.addEventListener("click", ()=>{if(synth.speaking)synth.cancel();});
-backBtn.addEventListener("click",()=>{stepsSection.classList.add("hidden");});
-
-// تفعيل المايك عند الضغط على زر الطوارئ مع تلميح صوتي
+// تفعيل المايك عند الضغط على زر الطوارئ مباشرة
 if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
@@ -72,9 +64,11 @@ if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
     const last = event.results[event.results.length -1];
     const word = last[0].transcript.trim().toLowerCase();
     console.log("سمعت:", word);
+
+    // البحث عن الحالة
     const found = cases.find(c=>word.includes(c.name));
     if(found){
-      speakSteps([" تم التعرف على الحالة هذه خطوات إسعاف اولية:", found.name]);
+      // فوراً عرض الخطوات وقراءتها صوتياً
       showSteps(found);
     }
   };
@@ -82,17 +76,9 @@ if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
   recognition.onerror = function(e){console.log(e);}
 }
 
-// زر الطوارئ الكبير يفتح المايك ويعطي تلميح صوتي
+// زر الطوارئ الكبير يفتح المايك ويستمع مباشرة
 emergencyBtn.addEventListener("click", ()=>{
   if(recognition){
     recognition.start();
-    // التلميح الصوتي والنصي
-    const hintMessage = " نزيف أو إغماء أو انخفاض السكر";
-    hintText.textContent = hintMessage;
-    if(synth.speaking) synth.cancel();
-    const utter = new SpeechSynthesisUtterance(hintMessage);
-    utter.lang = "ar-SA";
-    synth.speak(utter);
   }
 });
-
