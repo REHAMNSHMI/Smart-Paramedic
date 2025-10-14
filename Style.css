@@ -50,10 +50,26 @@ h1{
   width:90%;
   max-width:320px;
 }
+.mic-btn{
+  margin-top:10px;
+  padding:12px 20px;
+  font-size:18px;
+  border-radius:12px;
+  background:#f1c40f;
+  border:none;
+  cursor:pointer;
+}
+
 .hint {
   color: #666;
   font-size:14px;
   text-align: center;
+}
+.suggestions{
+  margin-top:10px;
+  text-align:center;
+  font-size:14px;
+  color:#333;
 }
 
 .hidden{display:none}
@@ -75,7 +91,6 @@ h1{
   text-align:right;
 }
 .card h3{margin:0 0 6px;font-size:16px}
-.card p{margin:0 0 8px;color:#555;font-size:14px}
 .card button{
   background:var(--accent);
   color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;
