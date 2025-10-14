@@ -22,23 +22,30 @@ const CASES = {
 const btn = document.getElementById("emergencyBtn");
 const output = document.getElementById("output");
 
-// عرض الخطوات لكل الحالات مسبقاً
-output.innerHTML = "<b>🩺 الخطوات الإسعافية لكل الحالات:</b><br>" +
-    "<b>كاحل:</b><br>" +
-    CASES["كاحل"].map(s => "• " + s).join("<br>") + "<br><br>" +
-    "<b>ضغط:</b><br>" +
-    CASES["ضغط"].map(s => "• " + s).join("<br>") + "<br><br>" +
-    "<b>سكر:</b><br>" +
-    CASES["سكر"].map(s => "• " + s).join("<br>");
+// عرض تعليمات لكل الحالات بشكل واضح للمستخدم الذي لا يستطيع استخدام الصوت
+function showAllInstructions(){
+  let html = "<b>🩺 خطوات الإسعاف لكل الحالات:</b><br><br>";
+  for(const key in CASES){
+    html += `<b>${key}:</b><br>`;
+    html += CASES[key].map((s,i)=>`${i+1}. ${s}`).join("<br>");
+    html += "<br><br>";
+  }
+  output.innerHTML = html;
+}
+showAllInstructions();
 
+// دالة النطق الصوتي
 function speak(text){
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "ar-SA";
-  u.rate = 0.95;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
+  if('speechSynthesis' in window){
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "ar-SA";
+    u.rate = 0.95;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }
 }
 
+// تحقق من دعم المتصفح للتعرف على الصوت
 if ('webkitSpeechRecognition' in window) {
   const recognition = new webkitSpeechRecognition();
   recognition.lang = 'ar-SA';
@@ -55,13 +62,15 @@ if ('webkitSpeechRecognition' in window) {
     let matched = null;
 
     for (const key in CASES) {
-      if (text.includes(key)) matched = CASES[key];
+      if (text.includes(key)) matched = key;
     }
 
     if (matched) {
-      output.innerHTML = "<b>🩺 الخطوات الإسعافية:</b><br>" +
-          matched.map(s => "• " + s).join("<br>");
-      speak(matched.join("، ثم "));
+      // عرض الخطوات الخاصة بالحالة فقط
+      output.innerHTML = `<b>🩺 خطوات الإسعاف لحالة "${matched}":</b><br>` +
+        CASES[matched].map((s,i)=>`${i+1}. ${s}`).join("<br>");
+      // النطق الصوتي
+      speak(CASES[matched].join("، ثم "));
     } else {
       output.innerHTML = "❌ لم أفهم الحالة، حاول مرة أخرى.";
       speak("لم أفهم الحالة، حاول مرة أخرى.");
@@ -73,5 +82,6 @@ if ('webkitSpeechRecognition' in window) {
   };
 
 } else {
-  output.innerHTML += "<br><br>⚠️ المتصفح لا يدعم ميزة التعرف على الصوت";
+  // إذا المتصفح لا يدعم الصوت، نضيف تنويه
+  output.innerHTML += "<br><br>⚠️ المتصفح لا يدعم ميزة التعرف على الصوت.";
 }
