@@ -1,4 +1,6 @@
 const emergencyBtn = document.getElementById("emergencyBtn");
+const micBtn = document.getElementById("micBtn");
+const suggestions = document.getElementById("suggestions");
 const casesSection = document.getElementById("casesSection");
 const stepsSection = document.getElementById("stepsSection");
 const casesList = document.getElementById("casesList");
@@ -14,10 +16,18 @@ let currentUtterance = null;
 const cases = [
   {name:"كسر", steps:["ثبّت الجزء المصاب","تجنب الحركة","اطلب مساعدة طبية"]},
   {name:"نزيف", steps:["اضغط على مكان النزيف","ارفع الجزء المصاب","اطلب مساعدة طبية"]},
-  {name:"إغماء", steps:["ضع المصاب على ظهره","تأكد من التنفس","اطلب مساعدة طبية"]}
+  {name:"إغماء", steps:["ضع المصاب على ظهره","تأكد من التنفس","اطلب مساعدة طبية"]},
+  {name:"سكر منخفض", steps:["قدم للمصاب عصير أو حلوى","اجلس المصاب","اطلب مساعدة طبية"]},
+  {name:"حرق", steps:["برد المكان المصاب بماء","غطيه شاش نظيف","اطلب مساعدة طبية"]}
 ];
 
-// عرض الحالات
+// عرض الحالات أسفل زر الطوارئ
+function showSuggestions(){
+  suggestions.innerHTML = "الحالات المتاحة: " + cases.map(c=>c.name).join(", ");
+}
+showSuggestions();
+
+// عرض الحالات عند الضغط على زر الطوارئ
 emergencyBtn.addEventListener("click", ()=>{
   casesSection.classList.remove("hidden");
   casesList.innerHTML = "";
@@ -26,9 +36,7 @@ emergencyBtn.addEventListener("click", ()=>{
     card.className = "card";
     card.innerHTML = `<h3>${c.name}</h3>
                       <button>اختر</button>`;
-    card.querySelector("button").addEventListener("click",()=>{
-      showSteps(c);
-    });
+    card.querySelector("button").addEventListener("click",()=> showSteps(c));
     casesList.appendChild(card);
   });
 });
@@ -67,23 +75,32 @@ backBtn.addEventListener("click",()=>{
 });
 
 // التعرف على الصوت بالعربي
+let recognition = null;
 if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SpeechRecognition();
+  recognition = new SpeechRecognition();
   recognition.lang = "ar-SA";
   recognition.continuous = true;
   recognition.interimResults = false;
 
   recognition.onresult = function(event){
     const last = event.results[event.results.length -1];
-    const word = last[0].transcript.trim();
+    const word = last[0].transcript.trim().toLowerCase();
     console.log("سمعت:", word);
     const found = cases.find(c=>word.includes(c.name));
-    if(found) showSteps(found);
+    if(found){
+      speakSteps(["تم التعرف على الحالة:", found.name]);
+      showSteps(found);
+    }
   };
 
   recognition.onerror = function(e){console.log(e);}
-  recognition.start();
-} else {
-  console.log("تعرف الصوت غير مدعوم بهذا المتصفح");
 }
+
+// زر المايك
+micBtn.addEventListener("click", ()=>{
+  if(recognition){
+    recognition.start();
+    micBtn.textContent = "🔴 المايك مفعل";
+  }
+});
