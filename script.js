@@ -6,14 +6,18 @@ const caseTitle = document.getElementById("caseTitle");
 const stepsList = document.getElementById("stepsList");
 const stopBtn = document.getElementById("stopBtn");
 const playBtn = document.getElementById("playBtn");
+const backBtn = document.getElementById("back");
+const instruction = document.getElementById("instruction");
+const hint = document.getElementById("hint");
 
 const synth = window.speechSynthesis;
 let recognition = null;
 let currentUtterance = null;
 
+// الحالات مع التعديل: إغماء → كسر
 const cases = [
   {name:"نزيف", steps:["اضغط على مكان النزيف","ارفع الجزء المصاب","اطلب مساعدة طبية"], info:"اضغط على مكان النزيف واطلب المساعدة فورًا"},
-  {name:"اغماء", steps:["ضع المصاب على ظهره","تأكد من التنفس","اطلب مساعدة طبية"], info:"ضع الشخص مستلقيًا وتحقق من تنفسه"},
+  {name:"كسر", steps:["ثبت الجزء المكسور","تجنب تحريك المصاب","اطلب مساعدة طبية"], info:"ثبت الجزء المكسور واطلب المساعدة فورًا"},
   {name:"انخفاض السكر", steps:["قدم للمصاب عصير أو حلوى","اجلس المصاب","اطلب مساعدة طبية"], info:"قدم سكريات سريعة للمصاب وأجلسه"}
 ];
 
@@ -28,6 +32,11 @@ function showSteps(c){
     stepsList.appendChild(li);
   });
   speakSteps(c.steps);
+
+  // إخفاء الشاشة الرئيسية أثناء عرض الخطوات
+  emergencyBtn.style.display = "none";
+  showCasesBtn.style.display = "none";
+  hint.style.display = "none";
 }
 
 // التحكم بالصوت
@@ -93,3 +102,17 @@ emergencyBtn.addEventListener("click", ()=>{
 stopBtn.addEventListener("click", stopSpeech);
 playBtn.addEventListener("click", playLast);
 
+// زر الرجوع: العودة للشاشة الرئيسية
+backBtn.addEventListener("click", ()=>{
+  // إخفاء قسم الخطوات
+  stepsSection.style.display = "none";
+
+  // إيقاف أي صوت جاري
+  if(synth.speaking) synth.cancel();
+
+  // إعادة عرض الشاشة الرئيسية
+  emergencyBtn.style.display = "inline-block";
+  showCasesBtn.style.display = "inline-block";
+  hint.style.display = "block";
+  instruction.textContent = "اضغط زر الطوارئ للبدء";
+});
