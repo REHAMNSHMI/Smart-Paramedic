@@ -1,10 +1,12 @@
+/* الخط العام وخلفية الصفحة */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #e0e7ff, #c7d2fe); /* ألوان لافندر/أزرق فاتح */
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe); /* أزرق فاتح/لافندر */
   margin: 0;
   padding: 0;
 }
 
+/* الحاوية المركزية */
 .container {
   display: flex;
   flex-direction: column;
@@ -12,16 +14,19 @@ body {
   justify-content: center;
   min-height: 100vh;
   text-align: center;
+  padding: 20px;
 }
 
+/* العنوان الرئيسي */
 h1 {
   margin-bottom: 25px;
   font-size: 2em;
-  color: #4f46e5; /* أزرق داكن */
+  color: #4f46e5;
 }
 
+/* زر الطوارئ */
 #emergencyBtn {
-  background: #7c3aed; /* لون لافندر */
+  background: #7c3aed;
   color: white;
   border: none;
   border-radius: 15px;
@@ -37,12 +42,14 @@ h1 {
   background: #8b5cf6;
 }
 
+/* نص التلميح */
 #hint {
   margin-bottom: 20px;
   font-size: 1.1em;
   color: #3730a3;
 }
 
+/* زر عرض الحالات */
 #showCasesBtn {
   background: #3b82f6;
   color: white;
@@ -58,7 +65,7 @@ h1 {
   background: #2563eb;
 }
 
-/* ترتيب الحالات أفقي */
+/* قائمة الحالات أفقي */
 #casesList {
   display: flex;
   gap: 15px;
@@ -67,6 +74,7 @@ h1 {
   margin-bottom: 20px;
 }
 
+/* الكروت */
 .card {
   background: white;
   padding: 15px 20px;
@@ -74,12 +82,15 @@ h1 {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   text-align: center;
   min-width: 120px;
+  flex: 0 0 auto; /* يمنع الكرت من التمدد غير المتوقع */
 }
 
+/* إخفاء العناصر */
 .hidden {
-  display: none;
+  display: none !important;
 }
 
+/* قسم الخطوات */
 #stepsSection {
   display: none;
   margin-top: 20px;
@@ -89,6 +100,7 @@ h1 {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+/* قائمة الخطوات */
 ul { 
   list-style-type: none; 
   padding: 0; 
@@ -99,6 +111,7 @@ li {
   font-size: 1.2em; 
 }
 
+/* الأزرار الأخرى */
 button {
   margin: 5px;
   padding: 10px 20px;
