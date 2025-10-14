@@ -51,8 +51,8 @@ function stopSpeech(){
 
 // عرض الحالات نصيًا عند الضغط على الزر
 showCasesBtn.addEventListener("click", ()=>{
-  if(casesList.classList.contains("hidden")){
-    casesList.classList.remove("hidden");
+  if(casesList.classList.contains("")){
+    casesList.classList.remove("");
     casesList.innerHTML = "";
     cases.forEach(c=>{
       const card = document.createElement("div");
@@ -96,3 +96,4 @@ emergencyBtn.addEventListener("click", ()=>{
 // التحكم اليدوي بالصوت
 stopBtn.addEventListener("click", stopSpeech);
 playBtn.addEventListener("click", playLast);
+
