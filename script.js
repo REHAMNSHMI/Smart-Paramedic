@@ -22,9 +22,9 @@ const CASES = {
 const btn = document.getElementById("emergencyBtn");
 const output = document.getElementById("output");
 
-// عرض تعليمات لكل الحالات بشكل واضح للمستخدم الذي لا يستطيع استخدام الصوت
+// عرض جميع الخطوات لكل الحالات عند تحميل الصفحة
 function showAllInstructions(){
-  let html = "<b>🩺 خطوات الإسعاف لكل الحالات:</b><br><br>";
+  let html = "<b>🩺 الخطوات الإسعافية لكل الحالات:</b><br><br>";
   for(const key in CASES){
     html += `<b>${key}:</b><br>`;
     html += CASES[key].map((s,i)=>`${i+1}. ${s}`).join("<br>");
@@ -45,7 +45,7 @@ function speak(text){
   }
 }
 
-// تحقق من دعم المتصفح للتعرف على الصوت
+// تفعيل التعرف على الصوت
 if ('webkitSpeechRecognition' in window) {
   const recognition = new webkitSpeechRecognition();
   recognition.lang = 'ar-SA';
@@ -58,7 +58,6 @@ if ('webkitSpeechRecognition' in window) {
 
   recognition.onresult = (event) => {
     const text = event.results[0][0].transcript.trim();
-    console.log("تم التعرف على:", text);
     let matched = null;
 
     for (const key in CASES) {
@@ -66,10 +65,8 @@ if ('webkitSpeechRecognition' in window) {
     }
 
     if (matched) {
-      // عرض الخطوات الخاصة بالحالة فقط
       output.innerHTML = `<b>🩺 خطوات الإسعاف لحالة "${matched}":</b><br>` +
         CASES[matched].map((s,i)=>`${i+1}. ${s}`).join("<br>");
-      // النطق الصوتي
       speak(CASES[matched].join("، ثم "));
     } else {
       output.innerHTML = "❌ لم أفهم الحالة، حاول مرة أخرى.";
@@ -82,6 +79,5 @@ if ('webkitSpeechRecognition' in window) {
   };
 
 } else {
-  // إذا المتصفح لا يدعم الصوت، نضيف تنويه
   output.innerHTML += "<br><br>⚠️ المتصفح لا يدعم ميزة التعرف على الصوت.";
 }
