@@ -5,7 +5,6 @@
   --card:#ffffff;
   --text:#222;
 }
-
 *{box-sizing:border-box}
 body{
   font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", Arial;
@@ -63,3 +62,4 @@ h1{margin:6px 0; color:var(--accent-dark); font-size:28px;}
 
 footer{margin-top:20px;text-align:center;color:#777;font-size:13px;}
 @media (min-width:800px){main{max-width:900px;margin:0 auto}}
+
