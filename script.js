@@ -49,23 +49,19 @@ function stopSpeech(){
   if(synth.speaking) synth.cancel();
 }
 
-// عرض الحالات نصيًا عند الضغط على الزر
-showCasesBtn.addEventListener("click", ()=>{
-  if(casesList.classList.contains("")){
-    casesList.classList.remove("");
-    casesList.innerHTML = "";
-    cases.forEach(c=>{
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `<h3>${c.name}</h3><p>${c.info}</p>`;
-      casesList.appendChild(card);
-    });
-  } else {
-    casesList.classList.add("hidden");
-  }
+// عرض الحالات نصيًا
+showCasesBtn.addEventListener("click", () => {
+  casesList.innerHTML = "";
+  cases.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<h3>${c.name}</h3><p>${c.info}</p>`;
+    casesList.appendChild(card);
+  });
+  casesList.classList.toggle("hidden");
 });
 
-// تفعيل المايك عند الضغط على زر الطوارئ مباشرة
+// تفعيل المايك عند الضغط على زر الطوارئ
 if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
@@ -89,11 +85,10 @@ if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
 
 emergencyBtn.addEventListener("click", ()=>{
   if(recognition){
-    recognition.start(); // يفتح المايك فورًا
+    recognition.start();
   }
 });
 
 // التحكم اليدوي بالصوت
 stopBtn.addEventListener("click", stopSpeech);
 playBtn.addEventListener("click", playLast);
-
