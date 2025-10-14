@@ -1,4 +1,6 @@
 const emergencyBtn = document.getElementById("emergencyBtn");
+const showCasesBtn = document.getElementById("showCasesBtn");
+const casesList = document.getElementById("casesList");
 const stepsSection = document.getElementById("stepsSection");
 const caseTitle = document.getElementById("caseTitle");
 const stepsList = document.getElementById("stepsList");
@@ -15,6 +17,7 @@ const cases = [
   {name:"انخفاض السكر", steps:["قدم للمصاب عصير أو حلوى","اجلس المصاب","اطلب مساعدة طبية"], info:"قدم سكريات سريعة للمصاب وأجلسه"}
 ];
 
+// عرض الخطوات وقراءتها صوتياً
 function showSteps(c){
   stepsSection.style.display = "block";
   caseTitle.textContent = c.name;
@@ -27,6 +30,7 @@ function showSteps(c){
   speakSteps(c.steps);
 }
 
+// التحكم بالصوت
 function speakSteps(steps){
   if(synth.speaking) synth.cancel();
   currentUtterance = new SpeechSynthesisUtterance(steps.join(". "));
@@ -45,6 +49,23 @@ function stopSpeech(){
   if(synth.speaking) synth.cancel();
 }
 
+// عرض الحالات نصيًا عند الضغط على الزر
+showCasesBtn.addEventListener("click", ()=>{
+  if(casesList.classList.contains("hidden")){
+    casesList.classList.remove("hidden");
+    casesList.innerHTML = "";
+    cases.forEach(c=>{
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<h3>${c.name}</h3><p>${c.info}</p>`;
+      casesList.appendChild(card);
+    });
+  } else {
+    casesList.classList.add("hidden");
+  }
+});
+
+// تفعيل المايك عند الضغط على زر الطوارئ مباشرة
 if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
@@ -57,7 +78,6 @@ if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
     const word = last[0].transcript.trim().toLowerCase();
     console.log("سمعت:", word);
 
-    // البحث عن أي حالة موجودة
     const found = cases.find(c=>word.includes(c.name.toLowerCase()));
     if(found){
       showSteps(found);
@@ -69,9 +89,10 @@ if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
 
 emergencyBtn.addEventListener("click", ()=>{
   if(recognition){
-    recognition.start();
+    recognition.start(); // يفتح المايك فورًا
   }
 });
 
+// التحكم اليدوي بالصوت
 stopBtn.addEventListener("click", stopSpeech);
 playBtn.addEventListener("click", playLast);
