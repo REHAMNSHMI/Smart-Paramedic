@@ -3,22 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>المسعف الذكي</title>
-  <link rel="stylesheet" href="Style.css">
+  <title>المسعف الذكي - تجربة أولية</title>
+  <link rel="stylesheet" href="Style.css" />
 </head>
 <body>
   <header>
-    <h1>🚑 المسعف الذكي</h1>
-    <p class="subtitle">انطق حالتك لأعطيك التوجيهات صوتياً وكتابياً</p>
+    <h1>المسعف الذكي</h1>
+    <p class="subtitle">توجيهات إسعافية فورية بنقرة أو صوتياً</p>
   </header>
 
-  <main class="center">
-    <button id="emergencyBtn" class="big-btn">🎙 اضغط وتحدث</button>
-    <p class="hint">قل: "كاحل" أو "ضغط" أو "سكر"</p>
-    <div id="output" class="steps"></div>
+  <main>
+    <section class="hero">
+      <button id="emergencyBtn" class="big-btn">زر الطوارئ</button>
+      <p class="hint">اضغط الزر لاختيار الحالة أو قل اسم الحالة بالعربي</p>
+    </section>
+
+    <section id="casesSection" class="hidden">
+      <h2>اختر الحالة</h2>
+      <div id="casesList" class="cards"></div>
+    </section>
+
+    <section id="stepsSection" class="hidden">
+      <h2 id="caseTitle">اسم الحالة</h2>
+      <ol id="stepsList"></ol>
+      <div class="controls">
+        <button id="readBtn">اقرأ الإرشادات صوتياً</button>
+        <button id="stopBtn">إيقاف الصوت</button>
+        <button id="backBtn">رجوع</button>
+      </div>
+    </section>
   </main>
 
-  <script src="script.js" defer></script>
+  <footer>المسعف الذكي &copy; 2025</footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
-
