@@ -43,6 +43,7 @@ h1{margin:6px 0; color:var(--accent-dark); font-size:28px;}
   box-shadow:0 3px 10px rgba(0,0,0,0.06); text-align:right;
 }
 .card h3{margin:0 0 6px;font-size:16px;}
+.card p{margin:0 0 6px;font-size:14px; color:#555;}
 .card button{
   background:var(--accent); color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;
 }
