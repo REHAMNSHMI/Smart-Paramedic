@@ -1,39 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>المسعف الذكي</title>
-  <link rel="stylesheet" href="Style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المسعف الذكي</title>
+<link rel="stylesheet" href="Style.css">
 </head>
 <body>
-  <header>
-    <h1>المسعف الذكي</h1>
-    <p class="subtitle">توجيهات إسعافية فورية بنقرة أو صوتياً</p>
-  </header>
 
-  <main>
-    <section class="hero">
-      <button id="emergencyBtn" class="big-btn">زر الطوارئ</button>
-      <button id="showCasesBtn" class="small-btn">عرض الحالات المتاحة</button>
-      <div id="casesList" class="cards hidden"></div>
-      <p id="hintText" class="hint">اضغط زر الطوارئ للبدء</p>
-    </section>
+<div id="instruction">اضغط زر الطوارئ للبدء</div>
+<button id="emergencyBtn">🚨 الطوارئ</button>
+<div id="hint">الحالات المتاحة: نزيف، إغماء، انخفاض السكر</div>
 
-    <section id="stepsSection" class="hidden">
-      <h2 id="caseTitle">اسم الحالة</h2>
-      <ol id="stepsList"></ol>
-      <div class="controls">
-        <button id="readBtn">اقرأ الإرشادات صوتياً</button>
-        <button id="stopBtn">إيقاف الصوت</button>
-        <button id="backBtn">رجوع</button>
-      </div>
-    </section>
-  </main>
+<div id="stepsSection">
+  <h2 id="caseTitle"></h2>
+  <ul id="stepsList"></ul>
+  <button id="stopBtn">إيقاف الصوت</button>
+  <button id="playBtn">إعادة تشغيل الصوت</button>
+</div>
 
-  <footer>المسعف الذكي &copy; 2025</footer>
-
-  <script src="script.js" defer></script>
+<script src="script.js"></script>
 </body>
 </html>
-
