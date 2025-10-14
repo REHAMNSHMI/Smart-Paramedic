@@ -1,83 +1,89 @@
-const CASES = {
-  "كاحل": [
-    "أبعد المصاب عن الخطر.",
-    "اجلسه وارفع القدم قليلاً.",
-    "ضع ثلجاً ملفوفاً على المكان لمدة عشرين دقيقة.",
-    "ثبت الكاحل بضماد مرن.",
-    "اذهب للطبيب إن استمر الألم."
-  ],
-  "ضغط": [
-    "اجلس المصاب وارفع ساقيه قليلاً.",
-    "افتح الملابس الضيقة.",
-    "أعطه ماء إن لم يكن فاقد الوعي.",
-    "اطلب المساعدة إن لم يتحسن."
-  ],
-  "سكر": [
-    "إن كان منخفضاً أعطه عصير أو سكر سريع.",
-    "إن كان مرتفعاً اطلب المساعدة الطبية فوراً.",
-    "راقب التنفس والوعي حتى تصل المساعدة."
-  ]
-};
+const emergencyBtn = document.getElementById("emergencyBtn");
+const casesSection = document.getElementById("casesSection");
+const stepsSection = document.getElementById("stepsSection");
+const casesList = document.getElementById("casesList");
+const caseTitle = document.getElementById("caseTitle");
+const stepsList = document.getElementById("stepsList");
+const readBtn = document.getElementById("readBtn");
+const stopBtn = document.getElementById("stopBtn");
+const backBtn = document.getElementById("backBtn");
 
-const btn = document.getElementById("emergencyBtn");
-const output = document.getElementById("output");
+const synth = window.speechSynthesis;
+let currentUtterance = null;
 
-// عرض جميع الخطوات لكل الحالات عند تحميل الصفحة
-function showAllInstructions(){
-  let html = "<b>🩺 الخطوات الإسعافية لكل الحالات:</b><br><br>";
-  for(const key in CASES){
-    html += `<b>${key}:</b><br>`;
-    html += CASES[key].map((s,i)=>`${i+1}. ${s}`).join("<br>");
-    html += "<br><br>";
-  }
-  output.innerHTML = html;
+const cases = [
+  {name:"كسر", steps:["ثبّت الجزء المصاب","تجنب الحركة","اطلب مساعدة طبية"]},
+  {name:"نزيف", steps:["اضغط على مكان النزيف","ارفع الجزء المصاب","اطلب مساعدة طبية"]},
+  {name:"إغماء", steps:["ضع المصاب على ظهره","تأكد من التنفس","اطلب مساعدة طبية"]}
+];
+
+// عرض الحالات
+emergencyBtn.addEventListener("click", ()=>{
+  casesSection.classList.remove("hidden");
+  casesList.innerHTML = "";
+  cases.forEach(c=>{
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<h3>${c.name}</h3>
+                      <button>اختر</button>`;
+    card.querySelector("button").addEventListener("click",()=>{
+      showSteps(c);
+    });
+    casesList.appendChild(card);
+  });
+});
+
+// عرض الخطوات
+function showSteps(c){
+  casesSection.classList.add("hidden");
+  stepsSection.classList.remove("hidden");
+  caseTitle.textContent = c.name;
+  stepsList.innerHTML = "";
+  c.steps.forEach(s=>{
+    const li = document.createElement("li");
+    li.textContent = s;
+    stepsList.appendChild(li);
+  });
+  speakSteps(c.steps);
 }
-showAllInstructions();
 
-// دالة النطق الصوتي
-function speak(text){
-  if('speechSynthesis' in window){
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "ar-SA";
-    u.rate = 0.95;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(u);
-  }
+// التحكم بالصوت
+function speakSteps(steps){
+  stopSpeech();
+  currentUtterance = new SpeechSynthesisUtterance(steps.join(". "));
+  currentUtterance.lang = "ar-SA";
+  synth.speak(currentUtterance);
+}
+function stopSpeech(){
+  if(synth.speaking) synth.cancel();
 }
 
-// تفعيل التعرف على الصوت
-if ('webkitSpeechRecognition' in window) {
-  const recognition = new webkitSpeechRecognition();
-  recognition.lang = 'ar-SA';
-  recognition.continuous = false;
+// أزرار التحكم
+readBtn.addEventListener("click",()=>speakSteps(Array.from(stepsList.children).map(li=>li.textContent)));
+stopBtn.addEventListener("click",stopSpeech);
+backBtn.addEventListener("click",()=>{
+  stepsSection.classList.add("hidden");
+  casesSection.classList.remove("hidden");
+});
 
-  btn.onclick = () => {
-    recognition.start();
-    btn.textContent = "🎧 جاري الاستماع...";
+// التعرف على الصوت بالعربي
+if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.lang = "ar-SA";
+  recognition.continuous = true;
+  recognition.interimResults = false;
+
+  recognition.onresult = function(event){
+    const last = event.results[event.results.length -1];
+    const word = last[0].transcript.trim();
+    console.log("سمعت:", word);
+    const found = cases.find(c=>word.includes(c.name));
+    if(found) showSteps(found);
   };
 
-  recognition.onresult = (event) => {
-    const text = event.results[0][0].transcript.trim();
-    let matched = null;
-
-    for (const key in CASES) {
-      if (text.includes(key)) matched = key;
-    }
-
-    if (matched) {
-      output.innerHTML = `<b>🩺 خطوات الإسعاف لحالة "${matched}":</b><br>` +
-        CASES[matched].map((s,i)=>`${i+1}. ${s}`).join("<br>");
-      speak(CASES[matched].join("، ثم "));
-    } else {
-      output.innerHTML = "❌ لم أفهم الحالة، حاول مرة أخرى.";
-      speak("لم أفهم الحالة، حاول مرة أخرى.");
-    }
-  };
-
-  recognition.onend = () => {
-    btn.textContent = "🎙 اضغط وتحدث";
-  };
-
+  recognition.onerror = function(e){console.log(e);}
+  recognition.start();
 } else {
-  output.innerHTML += "<br><br>⚠️ المتصفح لا يدعم ميزة التعرف على الصوت.";
+  console.log("تعرف الصوت غير مدعوم بهذا المتصفح");
 }
