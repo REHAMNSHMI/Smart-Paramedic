@@ -63,13 +63,13 @@ showCasesBtn.addEventListener("click", () => {
   cases.forEach(c => {
     const card = document.createElement("div");
     card.className = "card";
-    card.innerHTML = `<h3>${c.name}</h3><p>${c.info}</p>`;
+    card.innerHTML = <h3>${c.name}</h3><p>${c.info}</p>;
     casesList.appendChild(card);
   });
   casesList.classList.toggle("hidden");
 });
 
-// تفعيل المايك عند الضغط على زر الطوارئ
+// تفعيل المايك عند الضغط على زر الطوارئ مع صوت ترحيب
 if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
@@ -93,6 +93,11 @@ if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
 
 emergencyBtn.addEventListener("click", ()=>{
   if(recognition){
+    // 🔊 تفعيل صوت الترحيب عند الضغط
+    const speakReady = new SpeechSynthesisUtterance("مرحباً، ما الحالة الطارئة؟");
+    speakReady.lang = "ar-SA";
+    synth.speak(speakReady);
+
     recognition.start();
   }
 });
